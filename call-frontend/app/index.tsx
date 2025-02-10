@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 export default function HomeScreen() {
   const { token, initializeAuth } = useAuthStore();
-  
+  console.log("Hiiiiiii")
   useEffect(() => {
     async function prepare() {
       try {

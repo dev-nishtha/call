@@ -6,12 +6,12 @@ import {
   useParticipant,
   RTCView
 } from '@videosdk.live/react-native-sdk';
-import { getToken } from '@/utils/api';
+import { createMeeting, token } from '../utils/api'
 
 interface ParticipantViewProps {
   participantId: string;
 }
-
+console.log(token)
 const MeetingView = () => {
   const { join, leave, toggleWebcam, toggleMic } = useMeeting({
     onMeetingJoined: () => {
@@ -53,14 +53,14 @@ const ConnectedParticipants = () => {
 //TODO: fix streaming
 const ParticipantView = ({ participantId }: ParticipantViewProps) => {
   const { webcamStream, webcamOn } = useParticipant(participantId);
-
-  return webcamOn ? (
-    <RTCView
-      streamURL={new MediaStream([webcamStream.track]).toURL()}
+ 
+  return webcamOn && webcamStream ? (
+<RTCView
+      streamURL={webcamStream.id} 
       style={styles.video}
       objectFit="cover"
     />
-  ) : (
+  ): (
     <View style={styles.placeholder}>
       <Text>Camera Off</Text>
     </View>
@@ -69,19 +69,19 @@ const ParticipantView = ({ participantId }: ParticipantViewProps) => {
 
 export default function HomeScreen() {
   const [meetingId] = useState(() => `meeting-${Date.now()}`);
-  const [token, setToken] = useState<string | null>(null);
+  // const [token, setToken] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        const token = await getToken();
-        setToken(token);
-      } catch (error) {
-        console.error("Failed to fetch token:", error);
-      }
-    };
-    fetchToken();
-  }, []);
+  // useEffect(() => {
+  //   const fetchToken = async () => {
+  //     try {
+  //       const token = await getToken();
+  //       setToken(token);
+  //     } catch (error) {
+  //       console.error("Failed to fetch token:", error);
+  //     }
+  //   };
+  //   fetchToken();
+  // }, []);
 
   if (!token) {
     return (
